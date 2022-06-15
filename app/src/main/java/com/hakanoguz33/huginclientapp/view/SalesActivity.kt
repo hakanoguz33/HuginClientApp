@@ -9,7 +9,6 @@ class SalesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sales)
-        val receivingData:String = intent.getStringExtra("data").toString()
 
     }
 }

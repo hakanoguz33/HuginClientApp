@@ -18,8 +18,34 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.net.ServerSocket
 import java.net.Socket
-import java.util.*
-import kotlin.concurrent.thread
+
+class Server:Runnable{
+    lateinit var s:Socket
+    lateinit var ss:ServerSocket
+    lateinit var isr:InputStreamReader
+    lateinit var buff:BufferedReader
+    lateinit var message:String
+    lateinit var h:Handler
+    override fun run() {
+        try {
+            ss = ServerSocket(6060)
+            while (true)
+            {
+                s=ss.accept()
+                isr = InputStreamReader(s.getInputStream())
+                buff = BufferedReader(isr)
+                message = buff.readLine()
+
+                        println(message)
+                        Log.e("olay",message)
+
+            }
+        }catch (e:IOException){
+            e.printStackTrace()
+        }
+    }
+
+}
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,37 +55,12 @@ class MainActivity : AppCompatActivity() {
         val ip:TextView = findViewById(R.id.ipTextView)
         val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val ipAddress: String = Formatter.formatIpAddress(wifiManager.connectionInfo.ipAddress)
-        ip.text = "Your Device IP Address: $ipAddress"
+        ip.text = "$ipAddress"
 
-        thread {
-            var s:Socket
-            var isr :InputStreamReader
-            var buff:BufferedReader
-            var message:String
-            var h:Handler
-            try {
-                var ss :ServerSocket = ServerSocket(6060)
-                while (true)
-                {
-                    s=ss.accept()
-                    isr = InputStreamReader(s.getInputStream())
-                    buff = BufferedReader(isr)
-                    message = buff.readLine()
-                }
-                h.post(Runnable {
-                    run(){
-                        Toast.makeText(applicationContext,message,Toast.LENGTH_SHORT).show()
-                        println(message)
-                        Log.e("olay",message)
-                    }
-                })
-            }catch (e:IOException)
-            {
-                e.printStackTrace()
-            }
+        var server:Server = Server()
+        val tri:Thread = Thread(server)
 
-        }
-
+        tri.start()
         var btn: Button = findViewById(R.id.btnConnection)
 
         btn.setOnClickListener {

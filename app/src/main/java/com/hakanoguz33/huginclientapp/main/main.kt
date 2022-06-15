@@ -10,11 +10,8 @@ fun main(){
         val client = ss.accept()
         val isr = InputStreamReader(client.getInputStream())
         val br = BufferedReader(isr)
-
-       while (true){
-           var message:String
-           message = br.readLine()
-           println(message)
-       }
+        var message:String
+        message = br.readLine()
+        println(message)
 
 }
